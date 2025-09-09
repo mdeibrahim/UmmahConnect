@@ -1,5 +1,4 @@
-// src/Components/DashboardHome.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   FiHome, 
   FiUser, 
@@ -21,12 +20,65 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
+import { USER_PROFILE_API } from '../utils/api';
 
 const DashboardHome = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth(); // Make sure token is available from AuthContext
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setLoading(true);
+        
+        // Get token from AuthContext or localStorage
+        const authToken = token || localStorage.getItem('authToken');
+        
+        if (!authToken) {
+          setError('No authentication token found. Please login again.');
+          setLoading(false);
+          return;
+        }
+
+        console.log('Auth token used for API:', authToken);
+        
+        const response = await fetch(USER_PROFILE_API, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${authToken}`, // Use 'Token' for Django REST Framework
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include' // Include cookies if needed
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('User Profile Data:', data);
+        console.log('Full Name:', data.full_name); // Log full_name if available
+
+        if (data.status === 'success') {
+          setProfileData(data.data);
+        } else {
+          setError(data.message || 'Failed to fetch profile data');
+        }
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+        setError(err.message || 'An error occurred while fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [token]); // Add token as dependency
+  
   // Mock data for posts
   const [posts] = useState([
     {
@@ -69,7 +121,7 @@ const DashboardHome = () => {
                 <span className="text-slate-900 font-bold text-sm">Φ</span>
               </div>
               <span className="text-xl font-bold">
-                <span className="text-[#7FFFD4]">Fake</span>Book
+                <span className="text-[#7FFFD4]">Ummah</span>Connect
               </span>
             </div>
 
@@ -85,49 +137,51 @@ const DashboardHome = () => {
               </div>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex items-center gap-1">
-              <button
-                onClick={() => setActiveTab('home')}
-                className={`p-3 rounded-lg transition-colors ${
-                  activeTab === 'home' 
-                    ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
-                    : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
-                }`}
-              >
-                <FiHome size={20} />
-              </button>
-              <button
-                onClick={() => setActiveTab('friends')}
-                className={`p-3 rounded-lg transition-colors ${
-                  activeTab === 'friends' 
-                    ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
-                    : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
-                }`}
-              >
-                <FiUsers size={20} />
-              </button>
-              <button
-                onClick={() => setActiveTab('messages')}
-                className={`p-3 rounded-lg transition-colors ${
-                  activeTab === 'messages' 
-                    ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
-                    : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
-                }`}
-              >
-                <FiMessageCircle size={20} />
-              </button>
-              <button
-                onClick={() => setActiveTab('notifications')}
-                className={`p-3 rounded-lg transition-colors ${
-                  activeTab === 'notifications' 
-                    ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
-                    : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
-                }`}
-              >
-                <FiBell size={20} />
-              </button>
-            </nav>
+            {/* Navigation (only for authenticated users) */}
+            {user && (
+              <nav className="flex items-center gap-1">
+                <button
+                  onClick={() => setActiveTab('home')}
+                  className={`p-3 rounded-lg transition-colors ${
+                    activeTab === 'home' 
+                      ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
+                      : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
+                  }`}
+                >
+                  <FiHome size={20} />
+                </button>
+                <button
+                  onClick={() => setActiveTab('friends')}
+                  className={`p-3 rounded-lg transition-colors ${
+                    activeTab === 'friends' 
+                      ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
+                      : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
+                  }`}
+                >
+                  <FiUsers size={20} />
+                </button>
+                <button
+                  onClick={() => setActiveTab('messages')}
+                  className={`p-3 rounded-lg transition-colors ${
+                    activeTab === 'messages' 
+                      ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
+                      : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
+                  }`}
+                >
+                  <FiMessageCircle size={20} />
+                </button>
+                <button
+                  onClick={() => setActiveTab('notifications')}
+                  className={`p-3 rounded-lg transition-colors ${
+                    activeTab === 'notifications' 
+                      ? 'bg-[#7FFFD4]/20 text-[#7FFFD4]' 
+                      : 'text-slate-300 hover:bg-white/5 hover:text-[#7FFFD4]'
+                  }`}
+                >
+                  <FiBell size={20} />
+                </button>
+              </nav>
+            )}
 
             {/* User Menu */}
             <div className="flex items-center gap-3">
@@ -177,13 +231,13 @@ const DashboardHome = () => {
             <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face"}
-                  alt={user?.name || "User"}
+                  src={profileData?.profile_picture || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face"}
+                  alt={profileData?.full_name || "User"}
                   className="w-12 h-12 rounded-full border-2 border-[#7FFFD4]/30"
                 />
                 <div>
-                  <h3 className="font-semibold text-slate-100">{user?.name || "User"}</h3>
-                  <p className="text-sm text-slate-400">@{user?.username || "username"}</p>
+                  <h3 className="font-semibold text-slate-100">{profileData?.full_name || user?.name || "User"}</h3>
+                  <p className="text-sm text-slate-400">@{profileData?.username || user?.username || "username"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -248,14 +302,14 @@ const DashboardHome = () => {
               <div className="flex items-center gap-3 mb-4">
                 <img
                   src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"}
-                  alt={user?.name || "User"}
+                  alt={user?.name || "Uvvser"}
                   className="w-10 h-10 rounded-full border-2 border-[#7FFFD4]/30"
                 />
                 <button
                   onClick={() => navigate('/feed/new-post')}
                   className="flex-1 text-left px-4 py-2 bg-white/5 border border-white/10 rounded-full text-slate-400 hover:bg-white/10 transition-colors"
                 >
-                  What's on your mind, {user?.name?.split(' ')[0] || 'User'}?
+                  What's on your mind, {user?.full_name?.split(' ')[0] || 'User'}?
                 </button>
               </div>
               

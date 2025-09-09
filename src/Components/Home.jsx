@@ -6,8 +6,8 @@ const Home = () => {
   const { isAuthenticated } = useAuth();
   
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 fakebook-grid">
-      <div className="fakebook-vignette" />
+  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 ummahconnect-grid">
+  <div className="ummahconnect-vignette" />
 
       <main className="relative z-10 container mx-auto px-6 py-24 md:py-28">
         <div className="mx-auto max-w-4xl">
@@ -16,7 +16,7 @@ const Home = () => {
               <div className="flex flex-col items-center text-center">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-slate-300/90">
                   <span className="h-2 w-2 rounded-full bg-[#7FFFD4] animate-pulse" />
-                  Welcome to Fakebook
+                  Welcome to Ummahconnect
                 </span>
 
                 <h1 className="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-200 via-cyan-200 to-fuchsia-300">

@@ -10,7 +10,7 @@ const ErrorPage = ({
     children
 }) => {
     return (
-        <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 fakebook-grid">
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 ummahconnect-grid">
             <div />
             <div className="container mx-auto px-6 py-24 flex min-h-screen items-center justify-center">
                 <div className="max-w-lg w-full rounded-3xl p-[1px] bg-gradient-to-r from-emerald-400/40 via-cyan-400/30 to-fuchsia-500/40 shadow-[0_0_60px_rgba(127,255,212,0.15)]">

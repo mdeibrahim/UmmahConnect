@@ -41,7 +41,7 @@ const Register = () => {
 
   if (submitted) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 fakebook-grid">
+  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 ummahconnect-grid">
         <div/>
         <div className="container mx-auto px-6 py-24 flex min-h-screen items-center justify-center">
           <div className="max-w-lg w-full rounded-3xl p-[1px] bg-gradient-to-r from-emerald-400/40 via-cyan-400/30 to-fuchsia-500/40 shadow-[0_0_60px_rgba(127,255,212,0.15)]">
@@ -69,7 +69,7 @@ const Register = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 fakebook-grid">
+  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 ummahconnect-grid">
       <div/>
       <div className="container mx-auto px-6 py-20 md:py-24">
         <div className="mx-auto max-w-xl">
@@ -80,7 +80,7 @@ const Register = () => {
                   Create account
                 </span>
                 <h2 className="mt-3 text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-200 via-cyan-200 to-fuchsia-300">
-                  Join Fakebook
+                  Join Ummahconnect
                 </h2>
                 <p className="mt-2 text-slate-300/90">Start sharing your photos and videos in style.</p>
               </div>

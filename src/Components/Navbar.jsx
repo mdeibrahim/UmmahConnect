@@ -47,15 +47,15 @@ const Navbar = ({ variant = "default" }) => {
       >
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex h-16 items-center justify-between">
-            <a href="/" className="text-lg font-bold tracking-tight">
-              <span className="text-[#7FFFD4]">Fake</span>book
+            <a href={isAuthenticated ? "/dashboard" : "/"} className="text-lg font-bold tracking-tight">
+              <span className="text-[#7FFFD4]">Ummah</span>connect
             </a>
 
             <nav className="hidden lg:flex items-center gap-1">
               <a
-                href="/"
-                aria-current={location.pathname === "/" ? "page" : undefined}
-                className={linkCls("/")}
+                href={isAuthenticated ? "/dashboard" : "/"}
+                aria-current={isAuthenticated ? (location.pathname === "/dashboard" ? "page" : undefined) : (location.pathname === "/" ? "page" : undefined)}
+                className={linkCls(isAuthenticated ? "/dashboard" : "/")}
               >
                 Home
               </a>
@@ -139,10 +139,10 @@ const Navbar = ({ variant = "default" }) => {
       >
         <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1">
           <a
-            href="/"
-            aria-current={location.pathname === "/" ? "page" : undefined}
+            href={isAuthenticated ? "/dashboard" : "/"}
+            aria-current={isAuthenticated ? (location.pathname === "/dashboard" ? "page" : undefined) : (location.pathname === "/" ? "page" : undefined)}
             onClick={() => setOpen(false)}
-            className={linkCls("/")}
+            className={linkCls(isAuthenticated ? "/dashboard" : "/")}
           >
             Home
           </a>
