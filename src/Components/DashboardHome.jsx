@@ -20,7 +20,7 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
-import { USER_PROFILE_API } from '../utils/api';
+import { USER_PROFILE_API, USER_ALL_POSTS_API } from '../utils/api';
 
 const DashboardHome = () => {
   const { user, logout, token } = useAuth(); // Make sure token is available from AuthContext
@@ -61,7 +61,7 @@ const DashboardHome = () => {
 
         const data = await response.json();
         console.log('User Profile Data:', data);
-        console.log('Full Name:', data.full_name); // Log full_name if available
+        console.log('Full Name:', profileData.full_name); // Log full_name if available
 
         if (data.status === 'success') {
           setProfileData(data.data);
@@ -79,30 +79,53 @@ const DashboardHome = () => {
     fetchUserProfile();
   }, [token]); // Add token as dependency
   
-  // Mock data for posts
-  const [posts] = useState([
-    {
-      id: 1,
-      user: { name: "John Doe", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face", verified: true },
-      content: "Just had an amazing day exploring the city! The architecture here is incredible. #citylife #explore",
-      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop",
-      time: "2 hours ago",
-      likes: 24,
-      comments: 8,
-      shares: 3,
-      liked: false
-    },
-    {
-      id: 2,
-      user: { name: "Sarah Wilson", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face", verified: false },
-      content: "Coffee and coding - the perfect combination for a productive morning! ☕️💻",
-      time: "4 hours ago",
-      likes: 12,
-      comments: 5,
-      shares: 1,
-      liked: true
-    }
-  ]);
+
+  // Posts state and fetch logic
+  const [viewAllPosts, setViewAllPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [postsError, setPostsError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setPostsLoading(true);
+        setPostsError(null);
+        const authToken = token || localStorage.getItem('authToken');
+        if (!authToken) {
+          setPostsError('No authentication token found. Please login again.');
+          setPostsLoading(false);
+          return;
+        }
+  const response = await fetch(USER_ALL_POSTS_API, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Full posts API response:', data);
+        if (data.status === 'success') {
+          setViewAllPosts(data.data || []);
+        } else {
+          setPostsError(data.message || 'Failed to fetch posts');
+        }
+      } catch (err) {
+        setPostsError(err.message || 'An error occurred while fetching posts');
+      } finally {
+        setPostsLoading(false);
+      }
+    };
+    fetchPosts();
+  }, [token]);
+
+
+  // Log posts to inspect API structure
+  console.log('Fetched posts:', viewAllPosts);
 
   const handleLogout = () => {
     logout();
@@ -231,13 +254,13 @@ const DashboardHome = () => {
             <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={profileData?.profile_picture || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face"}
+                  src={profileData?.profile_picture || "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png"}
                   alt={profileData?.full_name || "User"}
                   className="w-12 h-12 rounded-full border-2 border-[#7FFFD4]/30"
                 />
                 <div>
                   <h3 className="font-semibold text-slate-100">{profileData?.full_name || user?.name || "User"}</h3>
-                  <p className="text-sm text-slate-400">@{profileData?.username || user?.username || "username"}</p>
+                  <p className="text-sm text-slate-400">@{profileData?.username || user?.username || "userffffname"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -301,15 +324,15 @@ const DashboardHome = () => {
             <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"}
-                  alt={user?.name || "Uvvser"}
+                  src={profileData?.profile_picture || "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png"}
+                  alt={profileData?.profile_picture || "User"}
                   className="w-10 h-10 rounded-full border-2 border-[#7FFFD4]/30"
                 />
                 <button
                   onClick={() => navigate('/feed/new-post')}
                   className="flex-1 text-left px-4 py-2 bg-white/5 border border-white/10 rounded-full text-slate-400 hover:bg-white/10 transition-colors"
                 >
-                  What's on your mind, {user?.full_name?.split(' ')[0] || 'User'}?
+                  What's on your mind, {profileData?.full_name}?
                 </button>
               </div>
               
@@ -338,7 +361,7 @@ const DashboardHome = () => {
             </div>
 
             {/* Posts Feed */}
-            {posts.map((post) => (
+            {viewAllPosts.map((post) => (
               <div key={post.id} className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                 {/* Post Header */}
                 <div className="flex items-center justify-between mb-3">
