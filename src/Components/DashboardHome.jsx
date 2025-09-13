@@ -147,7 +147,7 @@ const DashboardHome = () => {
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center">
-                <span className="text-slate-900 font-bold text-sm"><img src="public/images/logo1m.png" alt="Logo" /></span>
+                <span className="text-slate-900 font-bold text-sm"><img src="/images/logo1m.png" alt="Logo" /></span>
               </div>
               <span className="text-xl font-bold">
                 <span className="text-[#7FFFD4]">Ummah</span>Connect
