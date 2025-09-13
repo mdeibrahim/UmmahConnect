@@ -45,8 +45,8 @@ const EditPost = () => {
           />
 
           <div className="flex items-center gap-2">
-            <button className="btn rounded-lg bg-[#7FFFD4]/90 text-slate-900 hover:bg-emerald-300/90">Save</button>
-            <button type="button" className="btn btn-ghost" onClick={() => nav(-1)}>Cancel</button>
+            <button className="btn rounded-lg bg-[#7FFFD4]/90 text-slate-900 hover:bg-emerald-300/90 cursor-pointer">Save</button>
+            <button type="button" className="btn btn-ghost cursor-pointer" onClick={() => nav(-1)}>Cancel</button>
           </div>
         </form>
       </div>

@@ -42,11 +42,7 @@ const Feed = () => {
         <PostCard
           key={p.id || p._id}
           post={p}
-          // You may need to adjust these props based on your API response
-          onView={() => nav(`/feed/post/${p.id || p._id}`)}
-          liked={false}
-          likesCount={p.likesCount || 0}
-          commentsCount={p.commentsCount || 0}
+          commentsCount={p.commentsCount || (Array.isArray(p.comments) ? p.comments.length : 0)}
           ownerActions={user && p.user && (user.id === p.user.id)}
         />
       ))}

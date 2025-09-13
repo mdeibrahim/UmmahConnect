@@ -215,7 +215,7 @@ const DashboardHome = () => {
             {/* User Menu */}
             <div className="flex items-center gap-3">
               <div className="relative group">
-                <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors">
+                <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
                   <img
                     src={profileData?.profile_picture || "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png"}
                     alt={profileData?.full_name || "User"}
@@ -227,22 +227,22 @@ const DashboardHome = () => {
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900/95 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <div className="p-2">
-                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                       <FiUser size={16} />
                       Profile
                     </button>
-                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                       <FiPlus size={16} />
                       Subscriptions
                     </button>
-                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                       <FiSettings size={16} />
                       Settings
                     </button>
                     <hr className="my-2 border-white/10" />
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
                     >
                       <FiLogOut size={16} />
                       Logout
@@ -295,20 +295,20 @@ const DashboardHome = () => {
               <div className="space-y-2">
                 <button 
                   onClick={() => navigate('/feed/new-post')}
-                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
                 >
                   <FiPlus size={16} />
                   Create Post
                 </button>
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                   <FiUsers size={16} />
                   Find Friends
                 </button>
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                   <FiCamera size={16} />
                   Stories
                 </button>
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                   <FiVideo size={16} />
                   Live Video
                 </button>
@@ -320,7 +320,7 @@ const DashboardHome = () => {
               <h4 className="font-semibold text-slate-100 mb-3">Trending</h4>
               <div className="space-y-2">
                 {['#TechNews', '#Photography', '#Travel', '#Food', '#Music'].map((topic) => (
-                  <button key={topic} className="w-full text-left px-3 py-2 text-sm text-[#7FFFD4] hover:bg-white/5 rounded-lg transition-colors">
+                  <button key={topic} className="w-full text-left px-3 py-2 text-sm text-[#7FFFD4] hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                     {topic}
                   </button>
                 ))}
@@ -340,7 +340,7 @@ const DashboardHome = () => {
                 />
                 <button
                   onClick={() => navigate('/feed/new-post')}
-                  className="flex-1 text-left px-4 py-2 bg-white/5 border border-white/10 rounded-full text-slate-400 hover:bg-white/10 transition-colors"
+                  className="flex-1 text-left px-4 py-2 bg-white/5 border border-white/10 rounded-full text-slate-400 hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   What's on your mind, {profileData?.full_name}?
                 </button>
@@ -348,22 +348,22 @@ const DashboardHome = () => {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors">
+                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                     <FiImage className="text-green-400" />
                     Photo
                   </button>
-                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors">
+                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                     <FiVideo className="text-red-400" />
                     Video
                   </button>
-                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors">
+                  <button className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                     <FiSmile className="text-yellow-400" />
                     Feeling
                   </button>
                 </div>
                 <button 
                   onClick={() => navigate('/feed/new-post')}
-                  className="px-4 py-2 bg-gradient-to-r from-emerald-500/90 to-cyan-500/90 text-slate-900 font-semibold rounded-lg hover:from-emerald-400 hover:to-cyan-400 transition-all"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-500/90 to-cyan-500/90 text-slate-900 font-semibold rounded-lg hover:from-emerald-400 hover:to-cyan-400 transition-all cursor-pointer"
                 >
                   Post
                 </button>
@@ -375,6 +375,7 @@ const DashboardHome = () => {
               <PostCard
                 key={post.id}
                 post={post}
+                commentsCount={post.commentsCount || (Array.isArray(post.comments) ? post.comments.length : 0)}
                 ownerActions={user && post.user && user.id === post.user.id}
               />
             ))}
@@ -403,7 +404,7 @@ const DashboardHome = () => {
                         <p className="text-xs text-slate-400">{friend.mutual} mutual friends</p>
                       </div>
                     </div>
-                    <button className="px-3 py-1 bg-[#7FFFD4]/20 text-[#7FFFD4] text-xs font-medium rounded-lg hover:bg-[#7FFFD4]/30 transition-colors">
+                    <button className="px-3 py-1 bg-[#7FFFD4]/20 text-[#7FFFD4] text-xs font-medium rounded-lg hover:bg-[#7FFFD4]/30 transition-colors cursor-pointer">
                       Add
                     </button>
                   </div>

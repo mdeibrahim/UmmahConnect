@@ -101,7 +101,7 @@ const Navbar = ({ variant = "default" }) => {
               <a
                 href={isAuthenticated ? "/dashboard" : "/"}
                 aria-current={isAuthenticated ? (location.pathname === "/dashboard" ? "page" : undefined) : (location.pathname === "/" ? "page" : undefined)}
-                className={linkCls(isAuthenticated ? "/dashboard" : "/")}
+                className={linkCls(isAuthenticated ? "/dashboard" : "/") + " cursor-pointer"}
               >
                 Home
               </a>
@@ -109,7 +109,7 @@ const Navbar = ({ variant = "default" }) => {
               <a
                 href="/feed"
                 aria-current={feedActive ? "page" : undefined}
-                className={`${linkCls("/feed")} ${feedActive ? "text-[#7FFFD4] underline" : ""}`}
+                className={`${linkCls("/feed")} ${feedActive ? "text-[#7FFFD4] underline" : ""} cursor-pointer`}
               >
                 Feed
               </a>
@@ -123,14 +123,14 @@ const Navbar = ({ variant = "default" }) => {
                   <a
                     href="/feed/my-posts"
                     aria-current={location.pathname === "/feed/my-posts" ? "page" : undefined}
-                    className={linkCls("/feed/my-posts")}
+                    className={linkCls("/feed/my-posts") + " cursor-pointer"}
                   >
                     My Posts
                   </a>
                   <a
                     href="/feed/new-post"
                     aria-current={location.pathname === "/feed/new-post" ? "page" : undefined}
-                    className={linkCls("/feed/new-post", "primary")}
+                    className={linkCls("/feed/new-post", "primary") + " cursor-pointer"}
                   >
                     Add Post
                   </a>
@@ -140,7 +140,7 @@ const Navbar = ({ variant = "default" }) => {
                     </span>
                     <button
                       onClick={logout}
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5"
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 cursor-pointer"
                     >
                       <FiLogOut size={16} />
                       Logout
@@ -152,14 +152,14 @@ const Navbar = ({ variant = "default" }) => {
                   <a
                     href="/register"
                     aria-current={location.pathname === "/register" ? "page" : undefined}
-                    className={linkCls("/register")}
+                    className={linkCls("/register") + " cursor-pointer"}
                   >
                     Register
                   </a>
                   <a
                     href="/login"
                     aria-current={location.pathname === "/login" ? "page" : undefined}
-                    className={linkCls("/login", "primary")}
+                    className={linkCls("/login", "primary") + " cursor-pointer"}
                   >
                     Login
                   </a>
@@ -170,7 +170,7 @@ const Navbar = ({ variant = "default" }) => {
             <button
               type="button"
               onClick={() => setOpen((s) => !s)}
-              className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#7FFFD4]/40"
+              className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#7FFFD4]/40 cursor-pointer"
               aria-label="Toggle menu"
               aria-expanded={open}
             >
