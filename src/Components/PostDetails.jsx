@@ -25,10 +25,10 @@ const CommentItem = ({ c, canEdit, onSave, onDelete }) => {
                 onChange={(e) => setText(e.target.value)}
                 className="input input-sm input-bordered w-full bg-white/10"
               />
-              <button className="btn btn-sm" onClick={() => { onSave(text); setEditing(false); }}>
+              <button className="btn btn-sm cursor-pointer" onClick={() => { onSave(text); setEditing(false); }}>
                 Save
               </button>
-              <button className="btn btn-sm btn-ghost" onClick={() => { setText(c.content); setEditing(false); }}>
+              <button className="btn btn-sm btn-ghost cursor-pointer" onClick={() => { setText(c.content); setEditing(false); }}>
                 Cancel
               </button>
             </div>
@@ -36,8 +36,8 @@ const CommentItem = ({ c, canEdit, onSave, onDelete }) => {
         </div>
         {canEdit && !editing && (
           <div className="flex gap-2">
-            <button className="btn btn-xs" onClick={() => setEditing(true)}>Edit</button>
-            <button className="btn btn-xs btn-error" onClick={onDelete}>Delete</button>
+            <button className="btn btn-xs cursor-pointer" onClick={() => setEditing(true)}>Edit</button>
+            <button className="btn btn-xs btn-error cursor-pointer" onClick={onDelete}>Delete</button>
           </div>
         )}
       </div>
@@ -69,7 +69,7 @@ const PostDetails = () => {
 
   return (
     <div className="space-y-4">
-      <button className="btn btn-sm rounded-lg bg-white/5 hover:bg-white/10" onClick={() => nav(-1)}>
+  <button className="btn btn-sm rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer" onClick={() => nav(-1)}>
         Back
       </button>
 
@@ -102,7 +102,7 @@ const PostDetails = () => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
-            <button className="btn rounded-lg bg-[#7FFFD4]/90 text-slate-900 hover:bg-emerald-300/90">
+            <button className="btn rounded-lg bg-[#7FFFD4]/90 text-slate-900 hover:bg-emerald-300/90 cursor-pointer">
               Post
             </button>
           </form>

@@ -9,7 +9,7 @@ const Root = () => {
   const location = useLocation();
   
   // Don't show Navbar for dashboard or feed pages (they have their own headers)
-  const hideNavbar = location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/feed');
+  const hideNavbar = location.pathname.startsWith('/dashboard') 
   
   return (
     <div className="relative min-h-screen bg-slate-950 text-slate-100 fakebook-grid">

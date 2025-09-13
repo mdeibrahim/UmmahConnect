@@ -1,5 +1,6 @@
 // src/LayOuts/FeedLayout.jsx
-import { Outlet, useLocation } from "react-router";
+import { Outlet } from "react-router";
+import Navbar from "../Components/Navbar";
 import { FiHome, FiPlusCircle, FiList } from "react-icons/fi";
 import { FeedProvider } from "../contexts/FeedContext";
 
@@ -23,56 +24,7 @@ const FeedLayout = () => {
         <div className="drawer">
           <input id="dash-drawer" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content">
-            <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-900/60 backdrop-blur-md">
-              <div className="mx-auto max-w-6xl px-4">
-                <div className="flex h-14 items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <label
-                      htmlFor="dash-drawer"
-                      className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 cursor-pointer"
-                      aria-label="Open sidebar"
-                    >
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-                    </label>
-                    <span className="text-lg font-bold tracking-tight">
-                      <span className="text-[#7FFFD4]">Phi</span>Book • Feed
-                    </span>
-                  </div>
-                  <nav className="hidden lg:flex items-center gap-1">
-                    <a
-                      href="/"
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition hover:underline underline-offset-4 decoration-2 decoration-[#7FFFD4] ${
-                        active("/") ? "text-[#7FFFD4] underline" : "text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5"
-                      }`}
-                    >
-                      Home
-                    </a>
-                    <a
-                      href="/feed"
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition hover:underline underline-offset-4 decoration-2 decoration-[#7FFFD4] ${
-                        active("/feed") ? "text-[#7FFFD4] underline" : "text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5"
-                      }`}
-                    >
-                      Feed
-                    </a>
-                    <a
-                      href="/feed/my-posts"
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition hover:underline underline-offset-4 decoration-2 decoration-[#7FFFD4] ${
-                        active("/feed/my-posts") ? "text-[#7FFFD4] underline" : "text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5"
-                      }`}
-                    >
-                      My Posts
-                    </a>
-                    <a
-                      href="/feed/new-post"
-                      className="px-3 py-2 rounded-lg text-sm font-medium transition bg-[#7FFFD4]/90 text-slate-900 hover:bg-emerald-300/90"
-                    >
-                      Add Post
-                    </a>
-                  </nav>
-                </div>
-              </div>
-            </header>
+            <Navbar />
 
             <main className="mx-auto max-w-6xl px-4 py-6">
               <Outlet />

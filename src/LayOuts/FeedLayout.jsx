@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { FeedProvider } from "../contexts/FeedContext";
 import Navbar from "../Components/Navbar";
 
+
 const FeedLayout = () => {
   return (
     <FeedProvider>

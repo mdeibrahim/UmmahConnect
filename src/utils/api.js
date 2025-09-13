@@ -1,5 +1,9 @@
+// User profile data API endpoint
 // src/utils/api.js
 const API_BASE_URL = 'https://phi-book-phi.vercel.app/api/v1';
+export const USER_PROFILE_API = `${API_BASE_URL}/view-profile/`;
+export const USER_ALL_POSTS_API = `${API_BASE_URL}/view-all-posts/`;
+
 
 // Generic API call function
 const apiCall = async (endpoint, options = {}) => {
@@ -12,10 +16,10 @@ const apiCall = async (endpoint, options = {}) => {
     ...options,
   };
 
-  // Add auth token if available
+  // Only add Authorization header if not logging in and token exists
   const token = localStorage.getItem('authToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (token && endpoint !== '/login/') {
+    config.headers.Authorization = `Token ${token}`;
   }
 
   try {

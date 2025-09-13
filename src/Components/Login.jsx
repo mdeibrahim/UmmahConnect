@@ -25,25 +25,18 @@ const Login = () => {
   const onSubmit = async (ev) => {
     ev.preventDefault();
     if (!validate()) return;
-    
     setLoading(true);
     setApiError("");
-    
+
     const result = await authAPI.login(form);
     console.log('API Result:', result);
     
     if (result.success) {
       console.log('Login successful:', result.data);
       console.log('Full response structure:', JSON.stringify(result.data, null, 2));
+
+      // Token extraction
       
-      // More flexible token extraction
-      const token = result.data.token || 
-                   result.data.access_token || 
-                   result.data.access || 
-                   result.data.accessToken ||
-                   result.data.jwt ||
-                   result.data.authToken ||
-                   result.data.sessionToken;
       
       // More flexible user extraction
       const user = result.data.user || 
@@ -51,6 +44,8 @@ const Login = () => {
                   result.data.profile ||
                   result.data.account ||
                   result.data;
+
+      const token = user?.data?.token;
       
       console.log('Extracted token:', token);
       console.log('Extracted user:', user);
@@ -91,13 +86,12 @@ const Login = () => {
       console.log('Login failed:', result.error);
       setApiError(result.error);
     }
-    
     setLoading(false);
   };
 
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 fakebook-grid">
+  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100 ummahconnect-grid">
       <div/>
       <div className="container mx-auto px-6 py-20 md:py-24">
         <div className="mx-auto max-w-xl">
@@ -110,7 +104,7 @@ const Login = () => {
                   Sign in
                 </span>
                 <h2 className="mt-3 text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-200 via-cyan-200 to-fuchsia-300">
-                  Log in to Fakebook
+                  Log in to Ummahconnect
                 </h2>
                 <p className="mt-2 text-slate-300/90">Continue sharing your photos and videos in style.</p>
               </div>

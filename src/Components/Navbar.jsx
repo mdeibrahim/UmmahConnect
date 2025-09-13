@@ -3,12 +3,52 @@ import { useEffect, useState } from "react";
 import { FiMenu, FiX, FiLogOut, FiHome, FiPlusCircle, FiList } from "react-icons/fi";
 import { useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import { USER_PROFILE_API } from '../utils/api';
 
 const Navbar = ({ variant = "default" }) => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { isAuthenticated, user, logout, loading } = useAuth();
+  const [profileData, setProfileData] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileError, setProfileError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setProfileLoading(true);
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          setProfileError('No authentication token found.');
+          setProfileLoading(false);
+          return;
+        }
+        const response = await fetch(USER_PROFILE_API, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.status === 'success') {
+          setProfileData(data.data);
+        } else {
+          setProfileError(data.message || 'Failed to fetch profile data');
+        }
+      } catch (err) {
+        setProfileError(err.message || 'An error occurred while fetching profile data');
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+    if (isAuthenticated) fetchUserProfile();
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -35,7 +75,8 @@ const Navbar = ({ variant = "default" }) => {
     ].join(" ");
   };
 
-  const feedActive = location.pathname.startsWith("/feed");
+  // Only mark Feed as active for /feed (not /feed/my-posts or /feed/new-post)
+  const feedActive = location.pathname === "/feed";
   const active = (p) => location.pathname === p;
 
   return (
@@ -47,15 +88,20 @@ const Navbar = ({ variant = "default" }) => {
       >
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex h-16 items-center justify-between">
-            <a href="/" className="text-lg font-bold tracking-tight">
-              <span className="text-[#7FFFD4]">Fake</span>book
-            </a>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center">
+                <span className="text-slate-900 font-bold text-sm"><img src="/images/logo1m.png" alt="Logo" /></span>
+              </div>
+              <span className="text-xl font-bold">
+                <span className="text-[#7FFFD4]">Ummah</span>Connect
+              </span>
+            </div>
 
             <nav className="hidden lg:flex items-center gap-1">
               <a
-                href="/"
-                aria-current={location.pathname === "/" ? "page" : undefined}
-                className={linkCls("/")}
+                href={isAuthenticated ? "/dashboard" : "/"}
+                aria-current={isAuthenticated ? (location.pathname === "/dashboard" ? "page" : undefined) : (location.pathname === "/" ? "page" : undefined)}
+                className={linkCls(isAuthenticated ? "/dashboard" : "/") + " cursor-pointer"}
               >
                 Home
               </a>
@@ -63,7 +109,7 @@ const Navbar = ({ variant = "default" }) => {
               <a
                 href="/feed"
                 aria-current={feedActive ? "page" : undefined}
-                className={`${linkCls("/feed")} ${feedActive ? "text-[#7FFFD4] underline" : ""}`}
+                className={`${linkCls("/feed")} ${feedActive ? "text-[#7FFFD4] underline" : ""} cursor-pointer`}
               >
                 Feed
               </a>
@@ -77,22 +123,24 @@ const Navbar = ({ variant = "default" }) => {
                   <a
                     href="/feed/my-posts"
                     aria-current={location.pathname === "/feed/my-posts" ? "page" : undefined}
-                    className={linkCls("/feed/my-posts")}
+                    className={linkCls("/feed/my-posts") + " cursor-pointer"}
                   >
                     My Posts
                   </a>
                   <a
                     href="/feed/new-post"
                     aria-current={location.pathname === "/feed/new-post" ? "page" : undefined}
-                    className={linkCls("/feed/new-post", "primary")}
+                    className={linkCls("/feed/new-post", "primary") + " cursor-pointer"}
                   >
                     Add Post
                   </a>
                   <div className="flex items-center gap-2 ml-2">
-                    <span className="text-sm text-slate-300">Welcome, {user?.name || user?.email}</span>
+                    <span className="text-sm text-slate-300">
+                      {profileLoading ? 'Loading...' : profileData?.username ? `Welcome, ${profileData.username}` : `Welcome, ${user?.username || user?.email}`}
+                    </span>
                     <button
                       onClick={logout}
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5"
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 cursor-pointer"
                     >
                       <FiLogOut size={16} />
                       Logout
@@ -104,14 +152,14 @@ const Navbar = ({ variant = "default" }) => {
                   <a
                     href="/register"
                     aria-current={location.pathname === "/register" ? "page" : undefined}
-                    className={linkCls("/register")}
+                    className={linkCls("/register") + " cursor-pointer"}
                   >
                     Register
                   </a>
                   <a
                     href="/login"
                     aria-current={location.pathname === "/login" ? "page" : undefined}
-                    className={linkCls("/login", "primary")}
+                    className={linkCls("/login", "primary") + " cursor-pointer"}
                   >
                     Login
                   </a>
@@ -122,7 +170,7 @@ const Navbar = ({ variant = "default" }) => {
             <button
               type="button"
               onClick={() => setOpen((s) => !s)}
-              className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#7FFFD4]/40"
+              className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-200/90 hover:text-[#7FFFD4] hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#7FFFD4]/40 cursor-pointer"
               aria-label="Toggle menu"
               aria-expanded={open}
             >
@@ -138,14 +186,14 @@ const Navbar = ({ variant = "default" }) => {
         }`}
       >
         <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1">
-          <a
-            href="/"
-            aria-current={location.pathname === "/" ? "page" : undefined}
+          {/* <a
+            href={isAuthenticated ? "/dashboard" : "/"}
+            aria-current={isAuthenticated ? (location.pathname === "/dashboard" ? "page" : undefined) : (location.pathname === "/" ? "page" : undefined)}
             onClick={() => setOpen(false)}
-            className={linkCls("/")}
+            className={linkCls(isAuthenticated ? "/dashboard" : "/")}
           >
             Home
-          </a>
+          </a> */}
           <a
             href="/feed"
             aria-current={feedActive ? "page" : undefined}
