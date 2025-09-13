@@ -6,7 +6,7 @@ import PostCard from "./PostCard";
 
 const MyPosts = () => {
   const nav = useNavigate();
-  const { posts, comments, deletePost, toggleLike } = useFeed();
+  const { posts, comments, deletePost, toggleLike,  } = useFeed();
 
   const myPosts = useMemo(
     () =>

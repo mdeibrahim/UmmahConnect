@@ -25,10 +25,9 @@ const Login = () => {
   const onSubmit = async (ev) => {
     ev.preventDefault();
     if (!validate()) return;
-    
     setLoading(true);
     setApiError("");
-    
+
     const result = await authAPI.login(form);
     console.log('API Result:', result);
     
@@ -87,7 +86,6 @@ const Login = () => {
       console.log('Login failed:', result.error);
       setApiError(result.error);
     }
-    
     setLoading(false);
   };
 

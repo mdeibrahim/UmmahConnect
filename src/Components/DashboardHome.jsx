@@ -22,6 +22,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { USER_PROFILE_API, USER_ALL_POSTS_API } from '../utils/api';
 
+import PostCard from "./PostCard";
+
 const DashboardHome = () => {
   const { user, logout, token } = useAuth(); // Make sure token is available from AuthContext
   const navigate = useNavigate();
@@ -61,7 +63,11 @@ const DashboardHome = () => {
 
         const data = await response.json();
         console.log('User Profile Data:', data);
-        console.log('Full Name:', profileData.full_name); // Log full_name if available
+        if (data && data.data && data.data.full_name) {
+          console.log('Full Name:', data.data.full_name); // Log full_name if available
+        } else {
+          console.log('Full Name not available');
+        }
 
         if (data.status === 'success') {
           setProfileData(data.data);
@@ -140,8 +146,8 @@ const DashboardHome = () => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center">
-                <span className="text-slate-900 font-bold text-sm">Φ</span>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center">
+                <span className="text-slate-900 font-bold text-sm"><img src="public/images/logo1m.png" alt="Logo" /></span>
               </div>
               <span className="text-xl font-bold">
                 <span className="text-[#7FFFD4]">Ummah</span>Connect
@@ -154,7 +160,7 @@ const DashboardHome = () => {
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search PhiBook"
+                  placeholder="Search UmmahConnect"
                   className="w-full pl-10 pr-4 py-2 rounded-full bg-white/5 border border-white/10 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7FFFD4]/50 focus:border-transparent"
                 />
               </div>
@@ -211,11 +217,11 @@ const DashboardHome = () => {
               <div className="relative group">
                 <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors">
                   <img
-                    src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"}
-                    alt={user?.name || "User"}
+                    src={profileData?.profile_picture || "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png"}
+                    alt={profileData?.full_name || "User"}
                     className="w-8 h-8 rounded-full border-2 border-[#7FFFD4]/30"
                   />
-                  <span className="text-sm font-medium text-slate-200">{user?.name || "User"}</span>
+                  <span className="text-sm font-medium text-slate-200">{profileData?.full_name || "User"}</span>
                 </button>
                 
                 {/* Dropdown Menu */}
@@ -224,6 +230,10 @@ const DashboardHome = () => {
                     <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
                       <FiUser size={16} />
                       Profile
+                    </button>
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
+                      <FiPlus size={16} />
+                      Subscriptions
                     </button>
                     <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors">
                       <FiSettings size={16} />
@@ -260,7 +270,7 @@ const DashboardHome = () => {
                 />
                 <div>
                   <h3 className="font-semibold text-slate-100">{profileData?.full_name || user?.name || "User"}</h3>
-                  <p className="text-sm text-slate-400">@{profileData?.username || user?.username || "userffffname"}</p>
+                  <p className="text-sm text-slate-400">@{profileData?.username || user?.username || "username"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -362,65 +372,11 @@ const DashboardHome = () => {
 
             {/* Posts Feed */}
             {viewAllPosts.map((post) => (
-              <div key={post.id} className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-xl p-4">
-                {/* Post Header */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={post.user.avatar}
-                      alt={post.user.name}
-                      className="w-10 h-10 rounded-full border-2 border-[#7FFFD4]/30"
-                    />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-semibold text-slate-100">{post.user.name}</h4>
-                        {post.user.verified && (
-                          <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                            <span className="text-white text-xs">✓</span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-400">{post.time}</p>
-                    </div>
-                  </div>
-                  <button className="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors">
-                    <FiMoreHorizontal />
-                  </button>
-                </div>
-
-                {/* Post Content */}
-                <div className="mb-4">
-                  <p className="text-slate-200 mb-3">{post.content}</p>
-                  {post.image && (
-                    <img
-                      src={post.image}
-                      alt="Post"
-                      className="w-full rounded-lg border border-white/10"
-                    />
-                  )}
-                </div>
-
-                {/* Post Actions */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                  <div className="flex items-center gap-6">
-                    <button className="flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors">
-                      <FiHeart className={post.liked ? "text-red-400 fill-current" : ""} />
-                      <span>{post.likes}</span>
-                    </button>
-                    <button className="flex items-center gap-2 text-slate-400 hover:text-[#7FFFD4] transition-colors">
-                      <FiMessageCircle />
-                      <span>{post.comments}</span>
-                    </button>
-                    <button className="flex items-center gap-2 text-slate-400 hover:text-green-400 transition-colors">
-                      <FiShare2 />
-                      <span>{post.shares}</span>
-                    </button>
-                  </div>
-                  <button className="text-slate-400 hover:text-yellow-400 transition-colors">
-                    <FiBookmark />
-                  </button>
-                </div>
-              </div>
+              <PostCard
+                key={post.id}
+                post={post}
+                ownerActions={user && post.user && user.id === post.user.id}
+              />
             ))}
           </div>
 
@@ -431,9 +387,9 @@ const DashboardHome = () => {
               <h4 className="font-semibold text-slate-100 mb-3">Friend Suggestions</h4>
               <div className="space-y-3">
                 {[
-                  { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face", mutual: 12 },
-                  { name: "Emma Davis", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face", mutual: 8 },
-                  { name: "Ryan Smith", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face", mutual: 15 }
+                  { name: "Rifat Rahman", avatar: "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png", mutual: 12 },
+                  { name: "Rikon", avatar: "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png", mutual: 8 },
+                  { name: "Sifat ali", avatar: "https://www.pngitem.com/pimgs/m/35-350426_profile-icon-png-default-profile-picture-png-transparent.png", mutual: 15 }
                 ].map((friend, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -464,7 +420,7 @@ const DashboardHome = () => {
                     <FiHeart className="text-emerald-400 text-sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-slate-200">Sarah liked your post</p>
+                    <p className="text-sm text-slate-200">Rifat liked your post</p>
                     <p className="text-xs text-slate-400">2 hours ago</p>
                   </div>
                 </div>
@@ -473,7 +429,7 @@ const DashboardHome = () => {
                     <FiMessageCircle className="text-blue-400 text-sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-slate-200">Mike commented on your photo</p>
+                    <p className="text-sm text-slate-200">Rikon commented on your photo</p>
                     <p className="text-xs text-slate-400">4 hours ago</p>
                   </div>
                 </div>
@@ -482,7 +438,7 @@ const DashboardHome = () => {
                     <FiUsers className="text-purple-400 text-sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-slate-200">Alex sent you a friend request</p>
+                    <p className="text-sm text-slate-200">Sifat sent you a friend request</p>
                     <p className="text-xs text-slate-400">6 hours ago</p>
                   </div>
                 </div>

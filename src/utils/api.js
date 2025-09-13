@@ -16,10 +16,10 @@ const apiCall = async (endpoint, options = {}) => {
     ...options,
   };
 
-  // Add auth token if available
+  // Only add Authorization header if not logging in and token exists
   const token = localStorage.getItem('authToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (token && endpoint !== '/login/') {
+    config.headers.Authorization = `Token ${token}`;
   }
 
   try {

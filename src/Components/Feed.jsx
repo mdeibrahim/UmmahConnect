@@ -1,45 +1,56 @@
 // src/Components/Feed.jsx
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import PostCard from "./PostCard";
-import { useFeed, currentUser } from "../contexts/FeedContext";
+import { USER_ALL_POSTS_API } from "../utils/api";
+import { useAuth } from "../contexts/AuthContext";
 
 const Feed = () => {
   const nav = useNavigate();
-  const { posts, comments, toggleLike } = useFeed();
+  const { user } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const list = useMemo(
-    () =>
-      posts
-        .slice()
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .map((p) => ({
-          ...p,
-          likesCount: p.likesBy.length,
-          liked: p.likesBy.includes(currentUser.id),
-          commentsCount: comments.filter((c) => c.postId === p.id).length,
-        })),
-    [posts, comments]
-  );
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(USER_ALL_POSTS_API);
+        const data = await response.json();
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setPosts(data.data);
+        } else {
+          setError(data.message || 'Failed to fetch posts');
+        }
+      } catch (err) {
+        setError(err.message || 'An error occurred while fetching posts');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Feed</h1>
-      {list.map((p) => (
+      {loading && <p>Loading posts...</p>}
+      {error && <p className="text-red-400">{error}</p>}
+      {!loading && !error && posts.map((p) => (
         <PostCard
-          key={p.id}
+          key={p.id || p._id}
           post={p}
-          onView={() => nav(`/feed/post/${p.id}`)}
-          onLike={() => toggleLike(p.id)}
-          liked={p.liked}
-          likesCount={p.likesCount}
-          commentsCount={p.commentsCount}
-          ownerActions={p.userId === currentUser.id}
-          onEdit={() => nav(`/feed/edit/${p.id}`)}
-          onDelete={() => nav(`/feed/my-posts?del=${p.id}`)}
+          // You may need to adjust these props based on your API response
+          onView={() => nav(`/feed/post/${p.id || p._id}`)}
+          liked={false}
+          likesCount={p.likesCount || 0}
+          commentsCount={p.commentsCount || 0}
+          ownerActions={user && p.user && (user.id === p.user.id)}
         />
       ))}
-      {list.length === 0 && <p className="opacity-70">No posts yet.</p>}
+      {!loading && !error && posts.length === 0 && <p className="opacity-70">No posts yet.</p>}
     </div>
   );
 };
