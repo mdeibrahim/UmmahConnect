@@ -31,107 +31,75 @@ const DashboardHome = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        
-        // Get token from AuthContext or localStorage
-        const authToken = token || localStorage.getItem('authToken');
-        
-        if (!authToken) {
-          setError('No authentication token found. Please login again.');
-          setLoading(false);
-          return;
-        }
-
-        console.log('Auth token used for API:', authToken);
-        
-        const response = await fetch(USER_PROFILE_API, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Token ${authToken}`, // Use 'Token' for Django REST Framework
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include' // Include cookies if needed
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('User Profile Data:', data);
-        if (data && data.data && data.data.full_name) {
-          console.log('Full Name:', data.data.full_name); // Log full_name if available
-        } else {
-          console.log('Full Name not available');
-        }
-
-        if (data.status === 'success') {
-          setProfileData(data.data);
-        } else {
-          setError(data.message || 'Failed to fetch profile data');
-        }
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-        setError(err.message || 'An error occurred while fetching data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, [token]); // Add token as dependency
-  
-
-  // Posts state and fetch logic
   const [viewAllPosts, setViewAllPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [postsError, setPostsError] = useState(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setPostsLoading(true);
-        setPostsError(null);
-        const authToken = token || localStorage.getItem('authToken');
-        if (!authToken) {
-          setPostsError('No authentication token found. Please login again.');
-          setPostsLoading(false);
-          return;
-        }
-  const response = await fetch(USER_ALL_POSTS_API, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Token ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include'
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Full posts API response:', data);
-        if (data.status === 'success') {
-          setViewAllPosts(data.data || []);
-        } else {
-          setPostsError(data.message || 'Failed to fetch posts');
-        }
-      } catch (err) {
-        setPostsError(err.message || 'An error occurred while fetching posts');
-      } finally {
-        setPostsLoading(false);
+  const fetchData = async () => {
+    setLoading(true);
+    setPostsLoading(true);
+
+    const authToken = token || localStorage.getItem('authToken');
+    if (!authToken) {
+      setError('No authentication token found. Please login again.');
+      setPostsError('No authentication token found. Please login again.');
+      setLoading(false);
+      setPostsLoading(false);
+      return;
+    }
+
+    try {
+      const profileRequest = fetch(USER_PROFILE_API, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const postsRequest = fetch(USER_ALL_POSTS_API, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const [profileRes, postsRes] = await Promise.all([profileRequest, postsRequest]);
+
+      // Handle Profile
+      if (!profileRes.ok) throw new Error(`Profile HTTP error! status: ${profileRes.status}`);
+      const profileData = await profileRes.json();
+      if (profileData.status === 'success') {
+        setProfileData(profileData.data);
+      } else {
+        setError(profileData.message || 'Failed to fetch profile data');
       }
-    };
-    fetchPosts();
-  }, [token]);
 
+      // Handle Posts
+      if (!postsRes.ok) throw new Error(`Posts HTTP error! status: ${postsRes.status}`);
+      const postsData = await postsRes.json();
+      if (postsData.status === 'success') {
+        setViewAllPosts(postsData.data || []);
+      } else {
+        setPostsError(postsData.message || 'Failed to fetch posts');
+      }
 
-  // Log posts to inspect API structure
-  console.log('Fetched posts:', viewAllPosts);
+    } catch (err) {
+      setError(err.message);
+      setPostsError(err.message);
+    } finally {
+      setLoading(false);
+      setPostsLoading(false);
+    }
+  };
+
+  fetchData();
+}, [token]);
+
 
   const handleLogout = () => {
     logout();
@@ -231,9 +199,12 @@ const DashboardHome = () => {
                       <FiUser size={16} />
                       Profile
                     </button>
-                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
+                    <button
+                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+                      onClick={() => navigate('/subscription')}
+                    >
                       <FiPlus size={16} />
-                      Subscriptions
+                      Subscription
                     </button>
                     <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
                       <FiSettings size={16} />

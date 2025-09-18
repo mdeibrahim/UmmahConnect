@@ -8,43 +8,9 @@ const now = () => new Date().toISOString();
 
 export const currentUser = { id: "u_me", name: "You" };
 
-const seedPosts = [
-  {
-    id: uid(),
-    userId: "u_me",
-    authorName: "You",
-    text: "Launching PhiBook dashboard ✨",
-    imageUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1600&auto=format&fit=crop",
-    videoUrl: "",
-    likesBy: [],
-    createdAt: now(),
-  },
-  {
-    id: uid(),
-    userId: "u_jane",
-    authorName: "Jane Roe",
-    text: "This video is a vibe!",
-    imageUrl: "",
-    videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-    likesBy: ["u_me"],
-    createdAt: now(),
-  },
-];
-
-const seedComments = [
-  {
-    id: uid(),
-    postId: seedPosts[0].id,
-    userId: "u_jane",
-    authorName: "Jane Roe",
-    content: "Congrats! 🚀",
-    createdAt: now(),
-  },
-];
-
 export function FeedProvider({ children }) {
-  const [posts, setPosts] = useState(seedPosts);
-  const [comments, setComments] = useState(seedComments);
+  const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState([]);
 
   const getPostById = (id) => posts.find((p) => p.id === id) || null;
 
