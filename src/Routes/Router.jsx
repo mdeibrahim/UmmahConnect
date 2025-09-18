@@ -14,9 +14,8 @@ import AddPost from "../Components/AddPost";
 import EditPost from "../Components/EditPost";
 import PostDetails from "../Components/PostDetails";
 import ProtectedRoute from "../Components/ProtectedRoute";
-
-// ✅ New import
 import VerifyResult from "../Components/VerifyResult";
+import Subscription from "../Components/Subscription";
 
 const router = createBrowserRouter([
   {
@@ -36,8 +35,8 @@ const router = createBrowserRouter([
         ),
       },
 
-      // ✅ New route for verification result
-      { path: "/verify-result", element: <VerifyResult /> },
+  { path: "/verify-result", element: <VerifyResult /> },
+  { path: "/subscription", element: <Subscription /> },
     ],
   },
   {
